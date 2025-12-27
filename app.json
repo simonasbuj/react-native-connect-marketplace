@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "go-marketplace",
-    "slug": "go-marketplace",
+    "name": "go-connect-marketplace",
+    "slug": "go-connect-marketplace",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "gomarketplace",
+    "scheme": "goconnectmarketplace",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -22,6 +22,7 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
+      "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
