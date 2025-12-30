@@ -30,17 +30,14 @@ export default function Index() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="items-center mt-4">
+      <View className="flex-1 justify-center items-center p-4">
         <Text
           onPress={onTouch}
-          className="font-quicksand-bold text-3xl text-center text-primary border-4 border-primary p-4 rounded-lg"
+          className="font-quicksand-bold text-3xl text-center text-primary border-4 border-primary p-4 rounded-lg mb-4"
         >
           Welcome to Nativewindzzz!
         </Text>
-      </View>
 
-      {/* FlatList centered vertically in remaining space */}
-      <View className="flex-1 justify-center">
         <FlatList
           data={listings}
           keyExtractor={(item) => item.id.toString()}
@@ -49,11 +46,7 @@ export default function Index() {
               {item.title}: {item.price_in_cents}
             </Text>
           )}
-          contentContainerStyle={{
-            alignItems: 'center',
-            justifyContent: listings.length === 0 ? 'center' : 'flex-start',
-            flexGrow: 1,
-          }}
+          contentContainerStyle={{ paddingTop: 20 }}
           ListEmptyComponent={
             <Text className="text-gray-400 text-lg mt-4">
               No listings yet. Press the button!
