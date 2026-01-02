@@ -44,6 +44,7 @@ export default function Index() {
                                 className={cn("category-card", isEven ? "flex-row-reverse" : "flex-row")} 
                                 style={{ backgroundColor: item.color, overflow: "hidden" }}
                                 android_ripple={{ color: "#ffff22" }}
+                                onPress={() => console.log("selected category: ", item.title)}
                             >
                                 {({ pressed }) => (
                                     <Fragment>
