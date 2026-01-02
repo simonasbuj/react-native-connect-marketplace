@@ -1,59 +1,62 @@
-import { useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import { categoryImages } from "@/constants";
+import { Fragment, useEffect, useState } from "react";
+import { FlatList, Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import cn from "clsx";
  
+const API_URL = `${process.env.EXPO_PUBLIC_API_URL}/api/v1/categories`;
 
-type Listing = {
-  id: number;
-  title: string;
-  price_in_cents: number;
+type Category = {
+  id: string
+  title: string
+  description: string
+  color: string
 };
 
-const API_URL = "http://192.168.1.137:6767/api/v1/listings";
-
 export default function Index() {
-  const [listings, setListings] = useState<Listing[]>([]);
-  
-  const onTouch = async () => {
-    console.log("im touched at ", new Date().toISOString())
+    const [categories, setCategories] = useState<Category[]>([]);
 
-    try {
-      console.log("starting api call to ", API_URL)
-      const response = await fetch(API_URL);
-      const data = await response.json();
-      console.log("Listings:", data);
-      setListings(data.data.listings)
-    } catch (error) {
-      console.error("API error:", error);
+    const fetchCategories = async () => {
+        console.log("fetching from: ", API_URL)
+        try {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            setCategories(data.data)
+        } catch (error) {
+            console.error("fetching categories:", error);
+        }
     }
-  }
 
-  return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-1 justify-center items-center p-4">
-        <Text
-          onPress={onTouch}
-          className="font-quicksand-bold text-3xl text-center text-primary border-4 border-primary p-4 rounded-lg mb-4"
-        >
-          Welcome to Nativewindzzz!
-        </Text>
+    useEffect(() => {
+        fetchCategories()
+    }, [])
 
-        <FlatList
-          data={listings}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <Text className="text-center text-lg my-2">
-              {item.title}: {item.price_in_cents}
-            </Text>
-          )}
-          contentContainerStyle={{ paddingTop: 20 }}
-          ListEmptyComponent={
-            <Text className="text-gray-400 text-lg mt-4">
-              No listings yet. Press the button!
-            </Text>
-          }
-        />
-      </View>
-    </SafeAreaView>
-  );
+    return (
+        <SafeAreaView className="flex-1 bg-white">
+            <FlatList 
+                data={categories}
+                renderItem={({ item, index }) => {
+                    const isEven = index % 2 == 0
+
+
+                    return (
+                        <View>
+                            <Pressable className={cn("category-card", isEven ? "flex-row-reverse" : "flex-row")} style={{ backgroundColor: item.color }}>
+                                {({ pressed }) => (
+                                    <Fragment>
+                                        <View className="h-full w-1/2">
+                                            <Image source={categoryImages[item.title.toLowerCase()]} className="size-full" resizeMode="contain" />
+                                        </View>
+                                        <View className="category-card__info">
+                                            <Text className="text-white font-quicksand-bold">{item.title.toUpperCase()}</Text>
+                                        </View>
+                                    </Fragment>
+                                )}
+                            </Pressable>
+                        </View>
+                    )
+                }}
+            />
+        </SafeAreaView>
+    );
 }
