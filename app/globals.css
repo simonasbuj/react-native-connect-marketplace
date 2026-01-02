@@ -17,6 +17,10 @@
 }
 
 @layer components {
+    .h1-bold {
+        @apply text-3xl font-quicksand-bold;
+    }
+
     .category-card {
         @apply w-full h-48 my-3 rounded-xl overflow-hidden shadow-lg flex items-center gap-5;
     }

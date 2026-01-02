@@ -1,4 +1,4 @@
-import { categoryImages } from "@/constants";
+import { categoryImages, images } from "@/constants";
 import { Fragment, useEffect, useState } from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -38,17 +38,30 @@ export default function Index() {
                 renderItem={({ item, index }) => {
                     const isEven = index % 2 == 0
 
-
                     return (
                         <View>
-                            <Pressable className={cn("category-card", isEven ? "flex-row-reverse" : "flex-row")} style={{ backgroundColor: item.color }}>
+                            <Pressable 
+                                className={cn("category-card", isEven ? "flex-row-reverse" : "flex-row")} 
+                                style={{ backgroundColor: item.color, overflow: "hidden" }}
+                                android_ripple={{ color: "#ffff22" }}
+                            >
                                 {({ pressed }) => (
                                     <Fragment>
                                         <View className="h-full w-1/2">
-                                            <Image source={categoryImages[item.title.toLowerCase()]} className="size-full" resizeMode="contain" />
+                                            <Image 
+                                                source={categoryImages[item.title.toLowerCase()]} 
+                                                className="size-full" 
+                                                resizeMode="cover" 
+                                            />
                                         </View>
-                                        <View className="category-card__info">
-                                            <Text className="text-white font-quicksand-bold">{item.title.toUpperCase()}</Text>
+                                        <View className={cn("category-card__info", isEven ? "pl-10" : "pr-10")}>
+                                            <Text className="h1-bold text-white leading-tight">{item.title.toUpperCase()}</Text>
+                                            <Image 
+                                                source={images.arrowRight} 
+                                                className="size-10"
+                                                resizeMode="contain"
+                                                tintColor="#ffffff"
+                                            />
                                         </View>
                                     </Fragment>
                                 )}
@@ -56,6 +69,14 @@ export default function Index() {
                         </View>
                     )
                 }}
+                contentContainerClassName="pb-28 px-2"
+                ListHeaderComponent={() => (
+                    <View className="flex-between flex-row w-full my-1 px-5">
+                        <View className="flex-start">
+                            <Text className="font-bold">Categories</Text>
+                        </View>
+                    </View>
+                )}  
             />
         </SafeAreaView>
     );
