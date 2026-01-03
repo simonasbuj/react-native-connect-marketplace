@@ -30,6 +30,18 @@ const SignIn = () => {
         onPress={() => console.log("email:", email, "| password:", password)}
       />
 
+      <CustomButton 
+        title = "Sign In with Github"
+        onPress={() => console.log("signing in with github")}
+        style="bg-black"
+      />
+
+      <CustomButton 
+        title = "Sign In with Google"
+        onPress={() => console.log("signing in with google")}
+        style="bg-red-500"
+      />
+
       <View>
         <Text className="base-regular text-gray-100 text-center">
           Don't have an account?
