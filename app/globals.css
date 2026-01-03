@@ -21,6 +21,30 @@
         @apply text-3xl font-quicksand-bold;
     }
 
+    .label {
+        @apply text-base text-start w-full font-quicksand-medium text-gray-500 pl-2;
+    }
+
+    .input {
+        @apply rounded-lg p-3 w-full text-base font-quicksand-semibold text-dark-100 border-b leading-5;
+    }
+
+    .custom-btn {
+        @apply bg-primary rounded-full p-3 w-full flex flex-row justify-center;
+    }
+
+    .paragraph-semibold {
+        @apply text-base font-quicksand-semibold;
+    }
+
+    .base-regular {
+        @apply text-lg font-quicksand;
+    }
+
+    .base-bold {
+        @apply text-lg font-quicksand-bold !important;
+    }
+
     .category-card {
         @apply w-full h-48 my-3 rounded-xl overflow-hidden shadow-lg flex items-center gap-5;
     }
