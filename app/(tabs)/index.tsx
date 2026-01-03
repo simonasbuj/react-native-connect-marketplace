@@ -1,4 +1,4 @@
-import { categoryImages, images } from "@/constants";
+import { images } from "@/constants";
 import { Fragment, useEffect, useState } from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,6 +11,7 @@ type Category = {
   title: string
   description: string
   color: string
+  image_path: string
 };
 
 export default function Index() {
@@ -50,7 +51,7 @@ export default function Index() {
                                     <Fragment>
                                         <View className="h-full w-1/2">
                                             <Image 
-                                                source={categoryImages[item.title.toLowerCase()]} 
+                                                source={{ uri: `${process.env.EXPO_PUBLIC_API_URL}/${item.image_path}` }} 
                                                 className="size-full" 
                                                 resizeMode="cover" 
                                             />
