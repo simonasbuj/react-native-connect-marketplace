@@ -3,6 +3,7 @@ import { Fragment, useEffect, useState } from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import cn from "clsx";
+import { Redirect } from "expo-router";
  
 const API_URL = `${process.env.EXPO_PUBLIC_API_URL}/api/v1/categories`;
 
@@ -15,6 +16,11 @@ type Category = {
 };
 
 export default function Index() {
+    const isAuthenticated = true
+
+    if (!isAuthenticated) return <Redirect href="/(auth)/sign-in" />
+
+
     const [categories, setCategories] = useState<Category[]>([]);
 
     const fetchCategories = async () => {

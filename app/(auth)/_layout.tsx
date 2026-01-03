@@ -1,9 +1,12 @@
-import { View, Text } from 'react-native'
+import { Slot } from 'expo-router'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { Text } from "react-native";
 
 export default function _Layout() {  
   return (
-    <View>
-      <Text>auth layout</Text>
-    </View>
+    <SafeAreaView>
+      <Text>Auth layout</Text>
+      <Slot />
+    </SafeAreaView>
   )
 }
