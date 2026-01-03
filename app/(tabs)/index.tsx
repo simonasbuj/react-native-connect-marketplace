@@ -16,7 +16,7 @@ type Category = {
 };
 
 export default function Index() {
-    const isAuthenticated = true
+    const isAuthenticated = false
 
     if (!isAuthenticated) return <Redirect href="/(auth)/sign-in" />
 
