@@ -30,7 +30,7 @@ import coleslaw from "@/assets/images/coleslaw.png";
 import cucumber from "@/assets/images/cucumber.png";
 import emptyState from "@/assets/images/empty-state.png";
 import fries from "@/assets/images/fries.png";
-import loginGraphic from "@/assets/images/login-graphic.png";
+import loginGraphic from "@/assets/images/login-graphic.jpg";
 import logo from "@/assets/images/logo.png";
 import mozarellaSticks from "@/assets/images/mozarella-sticks.png";
 import mushrooms from "@/assets/images/mushrooms.png";
@@ -40,10 +40,6 @@ import pizzaOne from "@/assets/images/pizza-one.png";
 import salad from "@/assets/images/salad.png";
 import success from "@/assets/images/success.png";
 import tomatoes from "@/assets/images/tomatoes.png";
-import furniture from "@/assets/images/furniture.png";
-import phones from "@/assets/images/phones.png";
-import fashion from "@/assets/images/fashion.png";
-import laptops from "@/assets/images/laptops.png";
 
 export const images = {
     avatar,
@@ -87,15 +83,4 @@ export const images = {
     star,
     trash,
     user,
-    furniture,
-    phones,
-    fashion,
-    laptops,
 };
-
-export const categoryImages: { [key: string]: any } = {
-    "furniture": furniture,
-    "phones": phones,
-    "fashion": fashion,
-    "laptops": laptops,
-}
