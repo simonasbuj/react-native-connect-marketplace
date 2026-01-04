@@ -1,47 +1,38 @@
 import { images } from "@/constants";
-import { Fragment, useEffect, useState } from "react";
-import { FlatList, Image, Pressable, Text, View } from "react-native";
+import { Fragment } from "react";
+import { ActivityIndicator, FlatList, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import cn from "clsx";
 import { Redirect } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
+import { LISTINGS_QUERY_KEYS, fetchCategories } from "@/api/listings.api";
+import LoadingIndicator from "@/components/LoadingIndicator";
+import CustomButton from "@/components/CustomButton";
+import PageLoadError from "@/components/PageLoadError";
  
-const API_URL = `${process.env.EXPO_PUBLIC_API_URL}/api/v1/categories`;
-
-type Category = {
-  id: string
-  title: string
-  description: string
-  color: string
-  image_path: string
-};
 
 export default function Index() {
-    const isAuthenticated = false
+    const isAuthenticated = true
 
     if (!isAuthenticated) return <Redirect href="/(auth)/sign-in" />
 
+    const { data, isLoading, error, refetch } = useQuery({
+        queryKey: LISTINGS_QUERY_KEYS.fetchCategories,
+        queryFn: fetchCategories
+    })
 
-    const [categories, setCategories] = useState<Category[]>([]);
+    if (isLoading) return (
+        <LoadingIndicator text="Loading categories"/>
+    )
 
-    const fetchCategories = async () => {
-        console.log("fetching from: ", API_URL)
-        try {
-            const response = await fetch(API_URL);
-            const data = await response.json();
-            setCategories(data.data)
-        } catch (error) {
-            console.error("fetching categories:", error);
-        }
-    }
-
-    useEffect(() => {
-        fetchCategories()
-    }, [])
+    if (error) return (
+        <PageLoadError message={error.message} reloadFn={refetch}/>
+    )
 
     return (
         <SafeAreaView className="flex-1 bg-white">
             <FlatList 
-                data={categories}
+                data={data}
                 renderItem={({ item, index }) => {
                     const isEven = index % 2 == 0
 
