@@ -1,13 +1,12 @@
 import { images } from "@/constants";
 import { Fragment } from "react";
-import { ActivityIndicator, FlatList, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import cn from "clsx";
 import { Redirect } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { LISTINGS_QUERY_KEYS, fetchCategories } from "@/api/listings.api";
 import LoadingIndicator from "@/components/LoadingIndicator";
-import CustomButton from "@/components/CustomButton";
 import PageLoadError from "@/components/PageLoadError";
  
 
@@ -30,7 +29,7 @@ export default function Index() {
     )
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
             <FlatList 
                 data={data}
                 renderItem={({ item, index }) => {
