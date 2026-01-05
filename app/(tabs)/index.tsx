@@ -5,20 +5,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import cn from "clsx";
 import { Redirect } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import { LISTINGS_QUERY_KEYS, fetchCategories } from "@/api/listings.api";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import PageLoadError from "@/components/PageLoadError";
+import { fetchCategoriesQueryOptions } from "@/api/listingsQueryOptions";
  
 
 export default function Index() {
-    const isAuthenticated = true
+    const isAuthenticated = false
 
     if (!isAuthenticated) return <Redirect href="/(auth)/sign-in" />
 
-    const { data, isLoading, error, refetch } = useQuery({
-        queryKey: LISTINGS_QUERY_KEYS.fetchCategories,
-        queryFn: fetchCategories
-    })
+    const { data, isLoading, error, refetch } = useQuery(fetchCategoriesQueryOptions)
 
     if (isLoading) return (
         <LoadingIndicator text="Loading categories"/>

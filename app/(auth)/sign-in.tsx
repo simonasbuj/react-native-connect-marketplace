@@ -1,5 +1,7 @@
+import { signIn, refreshToken } from "@/api/auth.api"
 import CustomButton from "@/components/CustomButton"
 import CustomInput from "@/components/CustomInput"
+import { useMutation } from "@tanstack/react-query"
 import { Link, router } from 'expo-router'
 import { useState } from "react"
 import { View, Text } from 'react-native'
@@ -7,6 +9,15 @@ import { View, Text } from 'react-native'
 const SignIn = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+
+  const signInMutation = useMutation({
+    mutationFn: signIn,
+    onSuccess: ({ access_token }) => {
+      console.log("in page i got token: ", access_token)
+    },
+  })
+
+  const { mutate, isPending, isError, error } = signInMutation
 
   return (
     <View className="gap-6 bg-white rounded-lg p-5 mt-5">
@@ -25,21 +36,30 @@ const SignIn = () => {
           secureTextEntry={true}
         />
 
+      {isError && (
+        <Text className="text-red-500 text-sm text-center">
+          {error.message}
+        </Text>
+      )}
+
       <CustomButton 
         title = "Sign In"
-        onPress={() => console.log("email:", email, "| password:", password)}
+        onPress={() => mutate({email, password})}
+        isLoading={isPending}
       />
 
       <CustomButton 
         title = "Sign In with Github"
         onPress={() => console.log("signing in with github")}
         style="bg-black"
+        isLoading={isPending}
       />
 
       <CustomButton 
         title = "Sign In with Google"
         onPress={() => console.log("signing in with google")}
         style="bg-red-500"
+        isLoading={isPending}
       />
 
       <View>
