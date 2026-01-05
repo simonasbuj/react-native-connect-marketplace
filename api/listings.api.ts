@@ -19,7 +19,7 @@ type CategoriesResponse = {
 };
 
 export const fetchCategories = async (): Promise<Category[]> => {
-    console.log("fetching from: ", API_URL, new Date().toISOString())
+    console.log("fetching from: ", API_URL)
 
     const response = await fetch(API_URL);
 

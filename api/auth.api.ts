@@ -19,10 +19,9 @@ interface SignInPayload {
     password: string,
 }
 
-export const signIn = async (payload: SignInPayload): Promise<TokenData> => {
+export const signInAPI = async (payload: SignInPayload): Promise<TokenData> => {
     const url = `${API_URL}/login`
-    console.log("signing in using url: ", url, new Date().toISOString())
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    console.log("signing in:", url)
 
     const response = await fetch(url, {
         method: "POST",
@@ -39,15 +38,14 @@ export const signIn = async (payload: SignInPayload): Promise<TokenData> => {
         throw new Error(`Failed to sign in: (${response.status})`)
     }
 
-    const json: SignInResponse = await response.json();
-    console.log("got token: ", json.data.access_token)
+    const json: SignInResponse = await response.json()
 
     return json.data;
 }
 
-export const refreshToken = async(): Promise<TokenData> => {
+export const refreshTokenAPI = async(): Promise<TokenData> => {
     const url = `${API_URL}/refresh`
-    console.log("refreshing token using url: ", url, new Date().toISOString())
+    console.log("refreshing token:", url)
 
     const response = await fetch(url, {
         method: "POST",
@@ -61,7 +59,22 @@ export const refreshToken = async(): Promise<TokenData> => {
     }
 
     const json: SignInResponse = await response.json();
-    console.log("refreshed token: ", json.data.access_token)
 
     return json.data;
+}
+
+export const signOutAPI = async() => {
+    const url = `${API_URL}/logout`
+    console.log("logging out:", url)
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to logout: (${response.status})`)
+    }
 }

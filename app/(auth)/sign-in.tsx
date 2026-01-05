@@ -1,19 +1,25 @@
-import { signIn, refreshToken } from "@/api/auth.api"
+import { signInAPI } from "@/api/auth.api"
 import CustomButton from "@/components/CustomButton"
 import CustomInput from "@/components/CustomInput"
+import { useAuth } from "@/context/AuthContext"
 import { useMutation } from "@tanstack/react-query"
-import { Link, router } from 'expo-router'
+import { Link, Redirect, router } from 'expo-router'
 import { useState } from "react"
 import { View, Text } from 'react-native'
 
 const SignIn = () => {
+  const { isAuthenticated, signIn } = useAuth()
+  
+  if (isAuthenticated) return <Redirect href="/(tabs)" />
+  
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   const signInMutation = useMutation({
-    mutationFn: signIn,
+    mutationFn: signInAPI,
     onSuccess: ({ access_token }) => {
-      console.log("in page i got token: ", access_token)
+      signIn(access_token)
     },
   })
 
