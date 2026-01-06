@@ -14,7 +14,7 @@ interface SignInResponse {
     data: TokenData
 }
 
-interface SignInPayload {
+export interface SignInPayload {
     email: string,
     password: string,
 }
@@ -83,7 +83,7 @@ export const signOutAPI = async() => {
     }
 }
 
-interface SignUpPayload {
+export interface SignUpPayload {
     email: string,
     username: string,
     firstname: string,

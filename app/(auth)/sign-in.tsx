@@ -1,9 +1,9 @@
-import { signInAPI } from "@/api/auth.api"
+import { signInAPI, SignInPayload } from "@/api/auth.api"
 import CustomButton from "@/components/CustomButton"
 import CustomInput from "@/components/CustomInput"
 import { useAuth } from "@/context/AuthContext"
 import { useMutation } from "@tanstack/react-query"
-import { Link, Redirect, router } from 'expo-router'
+import { Link, Redirect } from 'expo-router'
 import { useState } from "react"
 import { View, Text } from 'react-native'
 
@@ -12,9 +12,14 @@ const SignIn = () => {
   
   if (isAuthenticated) return <Redirect href="/(tabs)" />
   
+  const [form, setForm] = useState<SignInPayload>({
+    email: "",
+    password: ""
+  })
 
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const updateField = (key: keyof typeof form, value: string) => {
+    setForm(prev => ({ ...prev, [key]: value }))
+  }
 
   const signInMutation = useMutation({
     mutationFn: signInAPI,
@@ -30,15 +35,15 @@ const SignIn = () => {
       <CustomInput 
           label="Email"
           placeholder="Enter your email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
+          value={form.email}
+          onChangeText={text => updateField("email", text)}
           keyboardType="email-address"
         />
       <CustomInput 
           label="Password"
           placeholder="Enter your password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
+          value={form.password}
+          onChangeText={text => updateField("password", text)}
           secureTextEntry={true}
         />
 
@@ -50,7 +55,7 @@ const SignIn = () => {
 
       <CustomButton 
         title = "Sign In"
-        onPress={() => mutate({email, password})}
+        onPress={() => mutate(form)}
         isLoading={isPending}
       />
 
