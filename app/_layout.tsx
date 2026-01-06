@@ -1,9 +1,19 @@
 import { SplashScreen, Stack } from "expo-router";
-import './globals.css'
 import { useFonts } from "expo-font"
 import { useEffect } from "react";
 import { StatusBar } from "react-native";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
 
+import './globals.css'
+import { AuthProvider } from "@/context/AuthContext";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+    },
+  },
+})
 
 export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
@@ -21,8 +31,12 @@ export default function RootLayout() {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-       <Stack screenOptions={{headerShown: false}}/>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <StatusBar barStyle="dark-content" />
+          <Stack screenOptions={{headerShown: false}}/>
+        </AuthProvider>
+      </QueryClientProvider>
     </>
    
   )

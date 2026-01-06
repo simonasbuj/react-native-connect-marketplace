@@ -1,47 +1,32 @@
 import { images } from "@/constants";
-import { Fragment, useEffect, useState } from "react";
-import { FlatList, Image, Pressable, Text, View } from "react-native";
+import { Fragment } from "react";
+import { FlatList, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import cn from "clsx";
-import { Redirect } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
+import LoadingIndicator from "@/components/LoadingIndicator";
+import PageLoadError from "@/components/PageLoadError";
+import { fetchCategoriesQueryOptions } from "@/api/listingsQueryOptions";
+import { useAuth } from "@/context/AuthContext";
  
-const API_URL = `${process.env.EXPO_PUBLIC_API_URL}/api/v1/categories`;
-
-type Category = {
-  id: string
-  title: string
-  description: string
-  color: string
-  image_path: string
-};
 
 export default function Index() {
-    const isAuthenticated = false
+    const { user, signOut } = useAuth()
 
-    if (!isAuthenticated) return <Redirect href="/(auth)/sign-in" />
+    const { data, isLoading, error, refetch } = useQuery(fetchCategoriesQueryOptions)
 
+    if (isLoading) return (
+        <LoadingIndicator text="Loading categories"/>
+    )
 
-    const [categories, setCategories] = useState<Category[]>([]);
-
-    const fetchCategories = async () => {
-        console.log("fetching from: ", API_URL)
-        try {
-            const response = await fetch(API_URL);
-            const data = await response.json();
-            setCategories(data.data)
-        } catch (error) {
-            console.error("fetching categories:", error);
-        }
-    }
-
-    useEffect(() => {
-        fetchCategories()
-    }, [])
+    if (error) return (
+        <PageLoadError message={error.message} reloadFn={refetch}/>
+    )
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
             <FlatList 
-                data={categories}
+                data={data}
                 renderItem={({ item, index }) => {
                     const isEven = index % 2 == 0
 
@@ -83,6 +68,11 @@ export default function Index() {
                         <View className="flex-start">
                             <Text className="font-bold">Categories</Text>
                         </View>
+                        <Pressable onPress={signOut} style={({pressed}) => [ { opacity: pressed ? 0.7 : 1, margin: 2 }, { padding: 2 } ]}>
+                            <Text>
+                                {user?.sub ?? "No User"}
+                            </Text>
+                        </Pressable>
                     </View>
                 )}  
             />

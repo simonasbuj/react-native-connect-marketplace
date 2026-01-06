@@ -1,5 +1,6 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, TextInput } from 'react-native'
+import React, { useState } from 'react'
+import cn from "clsx"
 
 interface CustomInputProps {
     placeholder?: string
@@ -16,11 +17,27 @@ const CustomInput = ({
     onChangeText,
     label,
     secureTextEntry = false,
-    keyboardType="default"
+    keyboardType = "default"
 }: CustomInputProps) => {
+
+  const [isFocused, setIsFocused] = useState(false)
+
   return (
-    <View>
-      <Text>CustomInput</Text>
+    <View className="w-full">
+      <Text className="label">{label}</Text>
+      <TextInput
+        autoCapitalize="none"
+        placeholder={placeholder}
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={secureTextEntry}
+        keyboardType={keyboardType}
+
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        placeholderTextColor="#888"
+        className={cn("input", isFocused ? "border-primary" : "border-gray-300")}
+      />
     </View>
   )
 }
