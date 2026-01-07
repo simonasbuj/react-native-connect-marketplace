@@ -12,7 +12,7 @@ Frontend for backend made with golang: [golang-connect-marketplace](https://gith
 - **TanStack Query (React Query)**
 - **JWT Authentication**
 
-### Screenshot
+## Screenshots
 
 <p>
   <img src="assets/readme/signin.png" width="250" /> 
