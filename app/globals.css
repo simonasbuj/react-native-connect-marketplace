@@ -45,6 +45,10 @@
         @apply text-lg font-quicksand-bold !important;
     }
 
+    .tab-icon {
+        @apply flex min-w-20 items-center justify-center min-h-full gap-1 mt-12;
+    }
+
     .category-card {
         @apply w-full h-48 my-3 rounded-xl overflow-hidden shadow-lg flex items-center gap-5;
     }

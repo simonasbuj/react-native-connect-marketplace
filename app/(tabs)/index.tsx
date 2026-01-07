@@ -7,12 +7,9 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import PageLoadError from "@/components/PageLoadError";
 import { fetchCategoriesQueryOptions } from "@/api/listingsQueryOptions";
-import { useAuth } from "@/context/AuthContext";
  
 
 export default function Index() {
-    const { user, signOut } = useAuth()
-
     const { data, isLoading, error, refetch } = useQuery(fetchCategoriesQueryOptions)
 
     if (isLoading) return (
@@ -68,11 +65,6 @@ export default function Index() {
                         <View className="flex-start">
                             <Text className="font-bold">Categories</Text>
                         </View>
-                        <Pressable onPress={signOut} style={({pressed}) => [ { opacity: pressed ? 0.7 : 1, margin: 2 }, { padding: 2 } ]}>
-                            <Text>
-                                {user?.sub ?? "No User"}
-                            </Text>
-                        </Pressable>
                     </View>
                 )}  
             />
