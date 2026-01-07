@@ -7,6 +7,8 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
 import './globals.css'
 import { AuthProvider } from "@/context/AuthContext";
 
+SplashScreen.preventAutoHideAsync()
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -26,7 +28,6 @@ export default function RootLayout() {
 
   useEffect(() => {
     if(error) throw error
-    if(fontsLoaded) SplashScreen.hideAsync()
   }, [fontsLoaded, error])
 
   return (
