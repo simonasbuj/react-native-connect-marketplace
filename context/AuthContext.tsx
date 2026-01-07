@@ -45,21 +45,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { mutate: refreshTokenMutate } = useMutation({
     mutationFn: refreshTokenAPI,
     onSuccess: (data: { access_token: string }) => {
-      try {
-        signIn(data.access_token)
-      } finally {
-        setIsInitialLoad(false)
-      }
+      signIn(data.access_token)
+      setIsInitialLoad(false)
     },
     onError: () => {
-      console.log("running on eror in refresh mutation")
-      try {
-        console.log("running signout on eror in refresh mutation")
-        signOut()
-      } finally {
-        console.log("running setIsInitialLoad on eror in refresh mutation")
-        setIsInitialLoad(false)
-      }
+      setIsInitialLoad(false)
+      signOut()
     }
   })
 
@@ -67,7 +58,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     signOutMutate()
     setAccessToken(null)
     setUser(null)
-  }
+    }
+
+  useEffect(() => {
+    if (!isInitialLoad) {
+      SplashScreen.hideAsync().catch(() => {})
+    }
+  }, [isInitialLoad])
 
   useEffect(() => {
     refreshTokenMutate()
@@ -82,7 +79,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       signOut,
       isInitialLoad,
     }),
-    [accessToken]
+    [accessToken, user, isInitialLoad]
   )
 
   return (
