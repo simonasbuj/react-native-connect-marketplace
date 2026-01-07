@@ -1,6 +1,6 @@
 import { images } from "@/constants";
 import { Fragment } from "react";
-import { FlatList, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import cn from "clsx";
 import { useQuery } from "@tanstack/react-query";

@@ -50,6 +50,7 @@ export const signInAPI = async (payload: SignInPayload): Promise<TokenData> => {
 export const refreshTokenAPI = async(): Promise<TokenData> => {
     const url = `${API_URL}/refresh`
     console.log("refreshing token:", url)
+    await new Promise(res => setTimeout(res, 3000))
 
     const response = await fetch(url, {
         method: "POST",
@@ -70,6 +71,7 @@ export const refreshTokenAPI = async(): Promise<TokenData> => {
 export const signOutAPI = async() => {
     const url = `${API_URL}/logout`
     console.log("logging out:", url)
+    console.log("UPDATED CODE ALER")
 
     const response = await fetch(url, {
         method: "POST",
