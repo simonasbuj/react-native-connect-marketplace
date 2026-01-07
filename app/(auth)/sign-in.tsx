@@ -3,15 +3,13 @@ import CustomButton from "@/components/CustomButton"
 import CustomInput from "@/components/CustomInput"
 import { useAuth } from "@/context/AuthContext"
 import { useMutation } from "@tanstack/react-query"
-import { Link, Redirect } from 'expo-router'
+import { Link } from 'expo-router'
 import { useState } from "react"
 import { View, Text } from 'react-native'
 
 const SignIn = () => {
-  const { isAuthenticated, signIn } = useAuth()
-  
-  if (isAuthenticated) return <Redirect href="/(tabs)" />
-  
+  const { signIn } = useAuth()
+
   const [form, setForm] = useState<SignInPayload>({
     email: "",
     password: ""

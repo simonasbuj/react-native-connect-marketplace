@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     signOutMutate()
     setAccessToken(null)
     setUser(null)
-    }
+  }
 
   useEffect(() => {
     if (!isInitialLoad) {
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       signOut,
       isInitialLoad,
     }),
-    [accessToken, user, isInitialLoad]
+    [accessToken, isInitialLoad]
   )
 
   return (
