@@ -2,7 +2,7 @@
 
 export const LISTINGS_QUERY_KEYS = {
     fetchCategories: ["fetchCategories"],
-    fetchListings: (category?: string, keyword?: string) => ["listings", category, keyword],
+    fetchListings: (category?: string, keyword?: string) => ["fetchListings", category, keyword],
 }
 
 const API_URL = `${process.env.EXPO_PUBLIC_API_URL}/api/v1`
@@ -54,18 +54,21 @@ type ListingsResponse = {
 }
 
 type FetchListingsParams = {
-  category?: string;
-  keyword?: string;
+  category?: string
+  keyword?: string
+  page: number
 };
 
 export const fetchListings = async({
   category,
   keyword,
-}: FetchListingsParams = {}): Promise<Listing[]> => {
+  page
+}: FetchListingsParams): Promise<Listing[]> => {
   const queryParams = new URLSearchParams()
 
   if (category) queryParams.append("category", category)
   if (keyword) queryParams.append("keyword", keyword)
+  queryParams.append("page", page.toString())
 
   const url = `${API_URL}/listings${queryParams.toString() ? `?${queryParams.toString()}` : ""}`
 
