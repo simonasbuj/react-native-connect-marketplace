@@ -1,27 +1,21 @@
 import { View, Text, FlatList, Image, Pressable } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
-import { useGlobalSearchParams, useRouter  } from "expo-router";
+import { useLocalSearchParams, useRouter  } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import { fetchListings, Listing, LISTINGS_QUERY_KEYS } from "@/api/listings.api";
+import { fetchListings, LISTINGS_QUERY_KEYS } from "@/api/listings.api";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "@/constants";
+import { Feather } from '@expo/vector-icons';
 
 const Search = () => {
   const router = useRouter()
   
-  const params = useGlobalSearchParams()
-  const initialCategory = Array.isArray(params.category) ? params.category[0] : params.category
+  const params = useLocalSearchParams()
+  const category = Array.isArray(params.category) ? params.category[0] : params.category
 
-  const [category, setCategory] = useState(initialCategory)
-  
   const { data, isLoading, error, refetch } = useQuery({
       queryKey: LISTINGS_QUERY_KEYS.fetchListings(category, ""),
       queryFn: () => fetchListings({category: category, keyword: ""})
   })
-
-  useEffect(() => {
-    setCategory(initialCategory)
-  }, [initialCategory])
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
@@ -29,13 +23,18 @@ const Search = () => {
           <View className="flex-start">
               <Text className="font-bold">Categories / {(category) ? category: "EVERYTHING"}</Text>
           </View>
-          <Pressable 
-            onPress={() => router.push({pathname: "/browse", params: { category: "", keyword: "" }})}
-          >
-            <Text>{(category) ? "clear": ""}</Text>
-          </Pressable>
+          {category && (
+            <Pressable
+              onPress={() => router.push({ pathname: "/browse", params: { category: "", keyword: "" } })}
+              className="flex-row items-center bg-primary px-3 py-1 rounded-full"
+              android_ripple={{ color: "#ccc", borderless: true }}
+            >
+              <Feather name="x" size={16} color="#000" className="mr-1" />
+              <Text className="text-sm font-semibold text-black">Clear</Text>
+            </Pressable>
+          )}
       </View>
-      <View className="px-5">
+      <View className="px-5 pb-5">
         <Text>Search Bar</Text>
       </View>
       <FlatList
@@ -45,7 +44,10 @@ const Search = () => {
         columnWrapperClassName="gap-3"
         contentContainerClassName="px-4 py-3 gap-3 pb-[120px]"
         renderItem={({ item }) => (
-          <Pressable className="flex-1 bg-white rounded-2xl pb-3  shadow-md">
+          <Pressable 
+            className="flex-1 bg-white rounded-2xl pb-3  shadow-md" 
+            onPress={() => router.push( {pathname: "/listings/[id]", params: {id: item.id}})}
+          >
             <View className="w-full aspect-[2/3] rounded-xl mb-3 overflow-hidden bg-gray-100">
               <Image
                 source={
