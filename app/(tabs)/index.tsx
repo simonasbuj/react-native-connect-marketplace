@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import PageLoadError from "@/components/PageLoadError";
 import { fetchCategoriesQueryOptions } from "@/api/listingsQueryOptions";
+import { router } from "expo-router";
  
 
 export default function Index() {
@@ -33,7 +34,8 @@ export default function Index() {
                                 className={cn("category-card", isEven ? "flex-row-reverse" : "flex-row")} 
                                 style={{ backgroundColor: item.color, overflow: "hidden" }}
                                 android_ripple={{ color: "#ffff22" }}
-                                onPress={() => console.log("selected category: ", item.title)}
+                                // onPress={() => router.push( {pathname: "/listings/[category]", params: {category: item.title}})}
+                                onPress={() => router.push({pathname: "/browse", params: { category: item.title, keyword: "" }})}
                             >
                                 {({ pressed }) => (
                                     <Fragment>

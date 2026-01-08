@@ -1,12 +1,13 @@
 
 
 export const LISTINGS_QUERY_KEYS = {
-    fetchCategories: ["fetchCategories"]
+    fetchCategories: ["fetchCategories"],
+    fetchListings: (category?: string, keyword?: string) => ["listings", category, keyword],
 }
 
-const API_URL = `${process.env.EXPO_PUBLIC_API_URL}/api/v1/categories`
+const API_URL = `${process.env.EXPO_PUBLIC_API_URL}/api/v1`
 
-type Category = {
+interface Category {
   id: string
   title: string
   description: string
@@ -14,19 +15,68 @@ type Category = {
   image_path: string
 }
 
-type CategoriesResponse = {
-  data: Category[];
+interface CategoriesResponse {
+  data: Category[]
 };
 
 export const fetchCategories = async (): Promise<Category[]> => {
-    console.log("fetching from: ", API_URL)
+  const url = `${API_URL}/categories`
+  console.log("fetching from: ", url)
 
-    const response = await fetch(API_URL);
+  const response = await fetch(url);
 
-    if (!response.ok) {
-        throw new Error(`Failed to fetch categories: ${response.status}`);
-    }
+  if (!response.ok) {
+      throw new Error(`Failed to fetch categories: ${response.status}`);
+  }
 
-    const json: CategoriesResponse = await response.json();
-    return json.data;
+  const json: CategoriesResponse = await response.json();
+  return json.data;
+}
+
+interface Image {
+  id: string
+  path: string
+}
+
+export interface Listing {
+  id: string
+  title: string
+  description: string
+  price_in_cents: number 
+  currency: string
+  images: Image[]
+}
+
+type ListingsResponse = {
+  data: {
+    listings: Listing[]
+  }
+}
+
+type FetchListingsParams = {
+  category?: string;
+  keyword?: string;
+};
+
+export const fetchListings = async({
+  category,
+  keyword,
+}: FetchListingsParams = {}): Promise<Listing[]> => {
+  const queryParams = new URLSearchParams()
+
+  if (category) queryParams.append("category", category)
+  if (keyword) queryParams.append("keyword", keyword)
+
+  const url = `${API_URL}/listings${queryParams.toString() ? `?${queryParams.toString()}` : ""}`
+
+  console.log("fetching from: ", url)
+
+  const response = await fetch(url)
+
+  if (!response.ok) {
+      throw new Error(`Failed to fetch listings: ${response.status}`);
+  }
+
+  const json: ListingsResponse = await response.json();
+  return json.data.listings;
 }

@@ -1,6 +1,6 @@
 
 
-export const LISTINGS_QUERY_KEYS = {
+export const AUTH_QUERY_KEYS = {
     signIn: ["signIn"]
 }
 
