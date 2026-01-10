@@ -1,20 +1,34 @@
+import { linkSellerAPI } from "@/api/payments.api";
 import CustomButton from "@/components/CustomButton"
 import { useAuth } from "@/context/AuthContext"
+import { useMutation } from "@tanstack/react-query";
 import { View, Text } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as WebBrowser from 'expo-web-browser';
+import { toast } from 'sonner-native';
 
 const Profile = () => {
-  const { signOut, user } = useAuth()
+  const { signOut, user, accessToken } = useAuth()
 
   const initial = user?.sub ? user.sub.charAt(0).toUpperCase() : "U"
+
+  const { mutate: linkSellerMutate, isPending } = useMutation({
+    mutationFn: () => linkSellerAPI(accessToken!),
+    onSuccess: async (data) => {
+      if (data?.url) {
+        await WebBrowser.openBrowserAsync(data.url)
+        toast.success("Seller account updated")
+      }
+    },
+    onError: (e) => {
+      toast.error(e.message)
+    }
+  })
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="flex-1 px-6 pt-10">
-
-        {/* --- 1. Header & Identity --- */}
         <View className="items-center mb-12">
-          {/* CSS-Only Avatar */}
           <View className="h-24 w-24 bg-slate-900 rounded-full items-center justify-center mb-6 shadow-xl shadow-slate-200">
             <Text className="text-4xl font-bold text-white">{"SB"}</Text>
           </View>
@@ -28,10 +42,8 @@ const Profile = () => {
              </Text>
           </View>
         </View>
-
-        {/* --- 2. Main Actions --- */}
+        
         <View className="flex-1">
-            {/* Seller Section - Grouped in a 'Card' for visual hierarchy */}
             <View className="bg-blue-50 p-6 rounded-[24px] border border-blue-100 mb-6">
                 <View className="mb-4">
                     <Text className="text-xl font-bold text-blue-950 mb-1">Seller Mode</Text>
@@ -39,10 +51,11 @@ const Profile = () => {
                 </View>
                 
                 <CustomButton
-                    onPress={() => console.log("Link seller")}
+                    onPress={linkSellerMutate}
                     style="bg-blue-600 shadow-sm shadow-blue-300 rounded-xl"
                     textStyle="text-white font-bold"
                     title="Link Seller Account"
+                    isLoading={isPending}
                 />
             </View>
             <View className="mb-4">
