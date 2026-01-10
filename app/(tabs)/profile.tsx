@@ -2,7 +2,7 @@ import { linkSellerAPI } from "@/api/payments.api";
 import CustomButton from "@/components/CustomButton"
 import { useAuth } from "@/context/AuthContext"
 import { useMutation } from "@tanstack/react-query";
-import { View, Text } from 'react-native'
+import { View, Text, Platform } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as WebBrowser from 'expo-web-browser';
 import { toast } from 'sonner-native';
@@ -17,7 +17,9 @@ const Profile = () => {
     onSuccess: async (data) => {
       if (data?.url) {
         await WebBrowser.openBrowserAsync(data.url)
-        toast.success("Seller account updated")
+        setTimeout(() => { // android is really annoying, this sleep is only because of android
+          toast.success("Seller account updated")
+        }, 500)        
       }
     },
     onError: (e) => {
