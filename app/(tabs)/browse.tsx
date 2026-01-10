@@ -21,6 +21,8 @@ const Search = () => {
         if (lastPage.length < 2) return undefined
         return allPages.length
       },
+      refetchOnMount: "always",
+      staleTime: 0,
   })
 
   const listings = data?.pages.flat() ?? [];

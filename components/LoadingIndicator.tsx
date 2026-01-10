@@ -12,7 +12,7 @@ const LoadingIndicator = ({
 }: LoadingIndicatorProps) => {
   return (
     <SafeAreaView className="flex-1 bg-white items-center justify-center">
-        <Text>{text}</Text>
+        <Text className="mb-2">{text}</Text>
         <ActivityIndicator size="small" color={color} />
     </SafeAreaView>
   )

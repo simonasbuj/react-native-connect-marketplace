@@ -3,6 +3,7 @@
 export const LISTINGS_QUERY_KEYS = {
     fetchCategories: ["fetchCategories"],
     fetchListings: (category?: string, keyword?: string) => ["fetchListings", category, keyword],
+    fetchListing: (id: string) => ["fetchListing", id],
 }
 
 const API_URL = `${process.env.EXPO_PUBLIC_API_URL}/api/v1`
@@ -38,6 +39,12 @@ interface Image {
   path: string
 }
 
+interface Seller {
+  id: string
+  username: string
+  created_at: string
+}
+
 export interface Listing {
   id: string
   title: string
@@ -45,6 +52,7 @@ export interface Listing {
   price_in_cents: number 
   currency: string
   images: Image[]
+  seller: Seller
 }
 
 type ListingsResponse = {
@@ -82,4 +90,23 @@ export const fetchListings = async({
 
   const json: ListingsResponse = await response.json();
   return json.data.listings;
+}
+
+type ListingResponse = {
+  data: Listing
+}
+
+export const fetchListing = async({id}: {id: string}): Promise<Listing> => {
+  const url = `${API_URL}/listings/${id}`
+  console.log("fetching from: ", url)
+
+  const response = await fetch(url)
+
+  if (!response.ok) {
+      throw new Error(`Failed to fetch listing: ${response.status}`);
+  }
+
+  const json: ListingResponse = await response.json();
+
+  return json.data;
 }

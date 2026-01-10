@@ -40,7 +40,7 @@ export default function RootLayout() {
               <Stack.Screen name="listings/[id]" 
                 options={{
                   animation: "slide_from_right",
-                  presentation:"modal"
+                  // presentation:"modal"
                 }}
               />
           </Stack>
