@@ -1,18 +1,65 @@
 import CustomButton from "@/components/CustomButton"
 import { useAuth } from "@/context/AuthContext"
 import { View, Text } from 'react-native'
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Profile = () => {
   const { signOut, user } = useAuth()
 
+  const initial = user?.sub ? user.sub.charAt(0).toUpperCase() : "U"
+
   return (
-    <View className="flex-1 items-center justify-center bg-white px-4">
-      <Text className="mb-4 text-lg">User ID: {user?.sub}</Text>
-      <CustomButton
-        onPress={signOut}
-        title="Sign Out"
-      />
-    </View>
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1 px-6 pt-10">
+
+        {/* --- 1. Header & Identity --- */}
+        <View className="items-center mb-12">
+          {/* CSS-Only Avatar */}
+          <View className="h-24 w-24 bg-slate-900 rounded-full items-center justify-center mb-6 shadow-xl shadow-slate-200">
+            <Text className="text-4xl font-bold text-white">{"SB"}</Text>
+          </View>
+
+          <Text className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2">
+            User ID
+          </Text>
+          <View className="bg-slate-50 px-6 py-3 rounded-2xl border border-slate-100">
+             <Text className="text-lg font-semibold text-slate-900 tracking-tight">
+               {user?.sub || "Unknown User"}
+             </Text>
+          </View>
+        </View>
+
+        {/* --- 2. Main Actions --- */}
+        <View className="flex-1">
+            {/* Seller Section - Grouped in a 'Card' for visual hierarchy */}
+            <View className="bg-blue-50 p-6 rounded-[24px] border border-blue-100 mb-6">
+                <View className="mb-4">
+                    <Text className="text-xl font-bold text-blue-950 mb-1">Seller Mode</Text>
+                    <Text className="text-blue-900/60 leading-5">Link your account to start selling.</Text>
+                </View>
+                
+                <CustomButton
+                    onPress={() => console.log("Link seller")}
+                    style="bg-blue-600 shadow-sm shadow-blue-300 rounded-xl"
+                    textStyle="text-white font-bold"
+                    title="Link Seller Account"
+                />
+            </View>
+            <View className="mb-4">
+        </View>
+        </View>
+
+        <View className="mb-4">
+            <CustomButton
+                onPress={signOut}
+                title="Sign Out"
+                style="bg-white border-2 border-slate-100  mb-[100px]"
+                textStyle="text-slate-600 font-bold"
+            />
+        </View>
+
+      </View>
+    </SafeAreaView>
   )
 }
 
