@@ -35,7 +35,7 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <StatusBar barStyle="dark-content" />
-          <Stack screenOptions={{headerShown: false}}>
+          <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen name="(tabs)" />
               <Stack.Screen name="listings/[id]" 
                 options={{
