@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Image, Pressable, Dimensions, StyleSheet, ScrollView, NativeSyntheticEvent, NativeScrollEvent } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchListing, LISTINGS_QUERY_KEYS } from "@/api/listings.api";
@@ -7,6 +7,8 @@ import LoadingIndicator from "@/components/LoadingIndicator";
 import PageLoadError from "@/components/PageLoadError";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "@/components/CustomButton";
+import Seperator from "@/components/Seperator";
+import { getBackgroundColorAsync, setBackgroundColorAsync } from "expo-system-ui";
 
 
 const { width } = Dimensions.get('window');
@@ -84,7 +86,7 @@ const ListingPage = () => {
             </View>
           </View>
 
-          <View className="h-[1px] w-full bg-slate-100 my-2" />
+          <Seperator />
 
           <View>
             <Text className="text-lg font-semibold text-slate-800 mb-1">
@@ -95,7 +97,7 @@ const ListingPage = () => {
             </Text>
           </View>
 
-          <View className="h-[1px] w-full bg-slate-100 my-4" />
+          <Seperator/>
           
           <View className="mb-4">
             <Text className="text-lg font-semibold text-slate-800 mb-1">

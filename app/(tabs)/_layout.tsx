@@ -3,7 +3,7 @@ import { images } from "@/constants"
 import { useAuth } from "@/context/AuthContext"
 import { Redirect, Tabs } from 'expo-router'
 
-export default function _Layout() {
+export default function _Layout() {    
   const { isAuthenticated, isInitialLoad } = useAuth()
 
   if (isInitialLoad) {

@@ -3,9 +3,13 @@ import { useFonts } from "expo-font"
 import { useEffect } from "react";
 import { StatusBar } from "react-native";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
+import { Toaster } from 'sonner-native';
+import { AuthProvider } from "@/context/AuthContext";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { setBackgroundColorAsync, getBackgroundColorAsync } from 'expo-system-ui';
 
 import './globals.css'
-import { AuthProvider } from "@/context/AuthContext";
+
 
 SplashScreen.preventAutoHideAsync()
 
@@ -34,16 +38,19 @@ export default function RootLayout() {
     <>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <StatusBar barStyle="dark-content" />
-          <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="listings/[id]" 
-                options={{
-                  animation: "slide_from_right",
-                  // presentation:"modal"
-                }}
-              />
-          </Stack>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <StatusBar barStyle="dark-content" />
+            <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="listings/[id]" 
+                  options={{
+                    animation: "slide_from_right",
+                    // presentation:"modal"
+                  }}
+                />
+            </Stack>
+            <Toaster swipeToDismissDirection="left" />
+          </GestureHandlerRootView>
         </AuthProvider>
       </QueryClientProvider>
     </>

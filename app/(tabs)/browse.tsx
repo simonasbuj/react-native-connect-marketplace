@@ -1,11 +1,12 @@
 import { View, Text, FlatList, Image, Pressable } from 'react-native'
 import { useLocalSearchParams, useRouter  } from "expo-router";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchListings, LISTINGS_QUERY_KEYS } from "@/api/listings.api";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "@/constants";
 import { Feather } from '@expo/vector-icons';
 import LoadingIndicator from "@/components/LoadingIndicator";
+import PageLoadError from "@/components/PageLoadError";
 
 const Search = () => {
   const router = useRouter()
@@ -13,7 +14,7 @@ const Search = () => {
   const params = useLocalSearchParams()
   const category = Array.isArray(params.category) ? params.category[0] : params.category
 
-  const { data, isFetchingNextPage, error, refetch, fetchNextPage } = useInfiniteQuery({
+  const { data, isFetching, isFetchingNextPage, error, refetch, fetchNextPage } = useInfiniteQuery({
       queryKey: LISTINGS_QUERY_KEYS.fetchListings(category, ""),
       initialPageParam: 0,
       queryFn: ({ pageParam }) => fetchListings({category: category, keyword: "", page: pageParam }),
@@ -22,7 +23,6 @@ const Search = () => {
         return allPages.length
       },
       refetchOnMount: "always",
-      staleTime: 0,
   })
 
   const listings = data?.pages.flat() ?? [];
@@ -47,6 +47,13 @@ const Search = () => {
       <View className="px-5 pb-5">
         <Text>Search Bar</Text>
       </View>
+
+      {isFetching && !isFetchingNextPage ? (
+        <LoadingIndicator text="Fetching listings" />
+      ) : error ? (
+        <PageLoadError message={error?.message!} reloadFn={refetch} />
+        ) : (
+
       <FlatList
         data={listings}
         keyExtractor={(item) => item.id}
@@ -55,6 +62,7 @@ const Search = () => {
         contentContainerClassName="px-4 py-3 gap-3 pb-[120px]"
         onEndReached={() => fetchNextPage()}
         onEndReachedThreshold={0.1}
+        showsVerticalScrollIndicator={false}
         ListFooterComponent={isFetchingNextPage ? <LoadingIndicator text="Fetching more listings"/> : null}
         renderItem={({ item }) => (
           <Pressable 
@@ -84,6 +92,7 @@ const Search = () => {
           </Pressable>
         )}
       />
+    )}
 
     </SafeAreaView>
   )

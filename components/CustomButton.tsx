@@ -1,6 +1,6 @@
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import cn from "clsx";
+import cn from "clsx"
 
 interface CustomButtonProps {
     onPress?: () => void;
