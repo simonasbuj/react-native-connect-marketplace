@@ -23,6 +23,7 @@ import emptyState from "@/assets/images/empty-state.png";
 import loginGraphic from "@/assets/images/login-graphic.jpg";
 import logo from "@/assets/images/logo.png";
 import success from "@/assets/images/success.png";
+import noImages from "@/assets/images/no-images.png";
 
 export const images = {
     emptyState,
@@ -49,4 +50,5 @@ export const images = {
     star,
     trash,
     user,
+    noImages,
 };

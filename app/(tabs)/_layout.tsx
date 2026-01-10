@@ -3,8 +3,6 @@ import { images } from "@/constants"
 import { useAuth } from "@/context/AuthContext"
 import { Redirect, Tabs } from 'expo-router'
 
-
-
 export default function _Layout() {
   const { isAuthenticated, isInitialLoad } = useAuth()
 
@@ -46,9 +44,9 @@ export default function _Layout() {
         }}
       />
       <Tabs.Screen
-        name="search"
+        name="browse"
         options={{
-          tabBarIcon: ({ focused} ) => <TabBarIcon focused={focused} title="Search" icon={images.search}/>
+          tabBarIcon: ({ focused} ) => <TabBarIcon focused={focused} title="Browse" icon={images.search}/>
         }}
       />
       <Tabs.Screen
