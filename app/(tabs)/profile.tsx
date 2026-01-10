@@ -55,7 +55,7 @@ const Profile = () => {
                 <CustomButton
                     onPress={linkSellerMutate}
                     style="bg-blue-600 shadow-sm shadow-blue-300 rounded-xl"
-                    textStyle="text-white font-bold"
+                    textStyle="text-white font-quicksand-bold"
                     title="Link Seller Account"
                     isLoading={isPending}
                 />
@@ -68,8 +68,8 @@ const Profile = () => {
             <CustomButton
                 onPress={signOut}
                 title="Sign Out"
-                style="bg-white border-2 border-slate-100  mb-[100px]"
-                textStyle="text-slate-600 font-bold"
+                style="bg-white border-2 border-slate-100 mb-[100px]"
+                textStyle="text-slate-600 font-quicksand-bold"
             />
         </View>
 

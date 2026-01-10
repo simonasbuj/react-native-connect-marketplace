@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react"
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { jwtDecode } from "jwt-decode"
 import { useMutation } from "@tanstack/react-query"
 import { refreshTokenAPI, signOutAPI } from "@/api/auth.api"
@@ -10,7 +10,6 @@ export interface User {
   sub: string
 }
 
-
 interface AuthContextValue {
   accessToken: string | null
   isAuthenticated: boolean
@@ -20,12 +19,15 @@ interface AuthContextValue {
   isInitialLoad: boolean
 }
 
+const REFRESH_GRACE_PERIOD_SECONDS = 30
+
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null)
   const [user, setUser] = useState<User | null>(null)
   const [isInitialLoad, setIsInitialLoad] = useState(true)
+  const didInitialRefreshRef = useRef(false)
 
   const signIn = (token: string) => {
     setAccessToken(token)
@@ -69,6 +71,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     refreshTokenMutate()
   }, [])
+
+  useEffect(() => {
+    if (!user?.exp) return
+
+    const now = Date.now() / 1000
+    const refreshIn = (user.exp - now - REFRESH_GRACE_PERIOD_SECONDS) * 1000
+
+    if (refreshIn <= 0) {
+      refreshTokenMutate()
+      return
+    }
+
+    const timeout = setTimeout(() => {
+      refreshTokenMutate()
+    }, refreshIn)
+
+    return () => clearTimeout(timeout)
+  }, [user?.exp])
 
   const value = useMemo(
     () => ({

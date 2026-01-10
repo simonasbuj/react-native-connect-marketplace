@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Image, Pressable, Dimensions, StyleSheet, ScrollView, NativeSyntheticEvent, NativeScrollEvent } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchListing, LISTINGS_QUERY_KEYS } from "@/api/listings.api";
@@ -8,6 +8,7 @@ import PageLoadError from "@/components/PageLoadError";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "@/components/CustomButton";
 import Seperator from "@/components/Seperator";
+import { getBackgroundColorAsync, setBackgroundColorAsync } from "expo-system-ui";
 
 
 const { width } = Dimensions.get('window');

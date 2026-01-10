@@ -6,6 +6,7 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
 import { Toaster } from 'sonner-native';
 import { AuthProvider } from "@/context/AuthContext";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { setBackgroundColorAsync, getBackgroundColorAsync } from 'expo-system-ui';
 
 import './globals.css'
 
