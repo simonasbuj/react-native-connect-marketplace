@@ -13,7 +13,7 @@ const Profile = () => {
   const initial = user?.sub ? user.sub.charAt(0).toUpperCase() : "U"
 
   const { mutate: linkSellerMutate, isPending } = useMutation({
-    mutationFn: () => linkSellerAPI(accessToken!),
+    mutationFn: (token: string) => linkSellerAPI(token),
     onSuccess: async (data) => {
       if (data?.url) {
         await WebBrowser.openBrowserAsync(data.url)
@@ -53,7 +53,7 @@ const Profile = () => {
                 </View>
                 
                 <CustomButton
-                    onPress={linkSellerMutate}
+                    onPress={() => linkSellerMutate(accessToken!)}
                     style="bg-blue-600 shadow-sm shadow-blue-300 rounded-xl"
                     textStyle="text-white font-quicksand-bold"
                     title="Link Seller Account"
