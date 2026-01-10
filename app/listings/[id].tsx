@@ -1,22 +1,27 @@
-import { View, Text, FlatList, Image, Pressable, Dimensions, StyleSheet, ScrollView } from 'react-native'
-import React from 'react'
+import { View, Text, FlatList, Image, Pressable, Dimensions, StyleSheet, ScrollView, NativeSyntheticEvent, NativeScrollEvent } from 'react-native'
+import React, { useState } from 'react'
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchListing, LISTINGS_QUERY_KEYS } from "@/api/listings.api";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import PageLoadError from "@/components/PageLoadError";
-import { images } from "@/constants";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "@/components/CustomButton";
 
 
 const { width } = Dimensions.get('window');
 
-
 const ListingPage = () => {
   const params = useLocalSearchParams()
   const id = Array.isArray(params.id) ? params.id[0] : params.id
+
+  const [currentIndex, setCurrentIndex] = useState(0)
   
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const index = Math.round(event.nativeEvent.contentOffset.x / width)
+    setCurrentIndex(index)
+  }
+
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: LISTINGS_QUERY_KEYS.fetchListing(id),
     queryFn: () => fetchListing({id: id}),
@@ -44,6 +49,7 @@ const ListingPage = () => {
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
+            onScroll={handleScroll}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <Image
@@ -53,6 +59,14 @@ const ListingPage = () => {
               />
             )}
           />
+          <View className="absolute bottom-2 left-0 right-0 flex-row justify-center">
+            {data?.images.map((_, i) => (
+              <View
+                key={i.toString()}
+                className={`mx-1 h-2 w-2 rounded-full ${i === currentIndex ? 'bg-white' : 'bg-white/50'}`}
+              />
+            ))}
+          </View>
         </View>
 
         <View className="flex-1 w-full bg-white px-8 pt-5">
