@@ -2,10 +2,12 @@ import { linkSellerAPI } from "@/api/payments.api";
 import CustomButton from "@/components/CustomButton"
 import { useAuth } from "@/context/AuthContext"
 import { useMutation } from "@tanstack/react-query";
-import { View, Text, Platform } from 'react-native'
+import { View, Text, Platform, Pressable } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as WebBrowser from 'expo-web-browser';
 import { toast } from 'sonner-native';
+import { Feather } from "@expo/vector-icons";
+import ProfileMenuItem from "@/components/ProfileMenuItem";
 
 const Profile = () => {
   const { signOut, user, accessToken } = useAuth()
@@ -46,22 +48,26 @@ const Profile = () => {
         </View>
         
         <View className="flex-1">
-            <View className="bg-blue-50 p-6 rounded-[24px] border border-blue-100 mb-6">
-                <View className="mb-4">
-                    <Text className="text-xl font-bold text-blue-950 mb-1">Seller Mode</Text>
-                    <Text className="text-blue-900/60 leading-5">Link your account to start selling.</Text>
-                </View>
-                
-                <CustomButton
-                    onPress={() => linkSellerMutate(accessToken!)}
-                    style="bg-blue-600 shadow-sm shadow-blue-300 rounded-xl"
-                    textStyle="text-white font-quicksand-bold"
-                    title="Link Seller Account"
-                    isLoading={isPending}
-                />
-            </View>
+          <View className="bg-blue-50 p-6 rounded-[24px] border border-blue-100 mb-6">
             <View className="mb-4">
-        </View>
+                <Text className="text-xl font-bold text-blue-950 mb-1">Seller Mode</Text>
+                <Text className="text-blue-900/60 leading-5">Link your account to start selling.</Text>
+            </View>
+            
+            <CustomButton
+                onPress={() => linkSellerMutate(accessToken!)}
+                style="bg-blue-600 shadow-sm shadow-blue-300 rounded-xl"
+                textStyle="text-white font-quicksand-bold"
+                title="Link Seller Account"
+                isLoading={isPending}
+            />
+          </View>
+
+          <View className="bg-slate-50 gap-2 p-6 rounded-[24px] border border-slate-100 mb-6 space-y-2">
+            <ProfileMenuItem label="My Orders" iconName="shopping-bag" onPress={() => console.log("Going to My Orders")}/>
+            <ProfileMenuItem label="Settings" iconName="settings" onPress={() => console.log("Going to Settings")}/>
+          </View>
+
         </View>
 
         <View className="mb-4">
