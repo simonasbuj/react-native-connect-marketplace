@@ -1,19 +1,24 @@
-import { View, Text, FlatList, Image, Pressable, Dimensions, StyleSheet, ScrollView, NativeSyntheticEvent, NativeScrollEvent } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useLocalSearchParams } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
+import { View, Text, FlatList, Image, Dimensions, StyleSheet, ScrollView, NativeSyntheticEvent, NativeScrollEvent, Platform } from 'react-native'
+import React, { useState } from 'react'
+import { router, useLocalSearchParams } from "expo-router";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { fetchListing, LISTINGS_QUERY_KEYS } from "@/api/listings.api";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import PageLoadError from "@/components/PageLoadError";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "@/components/CustomButton";
 import Seperator from "@/components/Seperator";
-import { getBackgroundColorAsync, setBackgroundColorAsync } from "expo-system-ui";
-
+import { images } from "@/constants";
+import { createCheckoutSessionAPI } from "@/api/payments.api";
+import * as WebBrowser from 'expo-web-browser';
+import { toast } from 'sonner-native';
+import { useAuth } from "@/context/AuthContext";
 
 const { width } = Dimensions.get('window');
 
 const ListingPage = () => {
+  const { accessToken } = useAuth()
+
   const params = useLocalSearchParams()
   const id = Array.isArray(params.id) ? params.id[0] : params.id
 
@@ -30,6 +35,29 @@ const ListingPage = () => {
     staleTime: 60 * 1000,
   })
 
+  const { mutate: createCheckoutSessionMutate, isPending } = useMutation({
+    mutationFn: ({ token, itemId }: { token: string; itemId: string }) => createCheckoutSessionAPI(token, itemId),
+    onSuccess: async (data) => {
+      if (data) {
+        const result = await WebBrowser.openAuthSessionAsync(data.url)
+        
+        if (result.type === "success") {
+          router.replace("/(tabs)/profile")
+          
+          setTimeout(() => {
+            router.push("/(tabs)/profile/my-orders")
+            toast.success("Payment succesful")
+          }, 100)
+        } else if (result.type === "cancel" || result.type === "dismiss") {
+          if (Platform.OS === 'ios') toast.error("Payment canceled")
+        }
+      }
+    },
+    onError: (e) => {
+      toast.error(e.message)
+    }
+  })
+
   if (isLoading) {
     return <LoadingIndicator text="Fetching listing data"/>
   }
@@ -42,12 +70,14 @@ const ListingPage = () => {
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
   const daysSince = diffDays === 0 ? "today" : `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
 
+  const imagesToRender = data?.images?.length ? data.images : [{ id: "placeholder", path: "" }];
+
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
       <ScrollView>
         <View className="aspect-[3/4] w-full">
           <FlatList
-            data={data?.images}
+            data={imagesToRender}
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
@@ -55,7 +85,11 @@ const ListingPage = () => {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <Image
-                source={{ uri: `${process.env.EXPO_PUBLIC_API_URL}/${item.path}` }}
+                source={
+                  item.path
+                    ? { uri: `${process.env.EXPO_PUBLIC_API_URL}/${item.path}` }
+                    : images.noImages
+                }
                 className="w-screen h-full"
                 resizeMode="cover"
               />
@@ -112,23 +146,15 @@ const ListingPage = () => {
       </ScrollView>
       
       <View className="pb-6 px-4">
-        <CustomButton title="BUY" textStyle="font-quicksand-bold shadow-xl"/>
+        <CustomButton 
+          title="BUY" 
+          textStyle="font-quicksand-bold shadow-xl"
+          onPress={() => createCheckoutSessionMutate({ token: accessToken!, itemId: id})}
+          isLoading={isPending}
+        />
       </View>
     </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    height: 300, 
-    marginTop: 50,
-  },
-  image: {
-    width: width, // The image fills the screen width
-    height: '100%',
-    resizeMode: 'cover',
-  },
-});
-
 
 export default ListingPage

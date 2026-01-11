@@ -54,7 +54,7 @@ export default function _Layout() {
         options={{
           tabBarIcon: ({ focused} ) => <TabBarIcon focused={focused} title="Sell" icon={images.bag}/>
         }}
-      />
+      />af
       <Tabs.Screen
         name="profile"
         options={{

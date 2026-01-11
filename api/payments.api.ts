@@ -22,8 +22,8 @@ export const linkSellerAPI = async(accessToken: string): Promise<Seller> => {
             "Authorization": `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-            refresh_url: `${process.env.EXPO_PUBLIC_API_URL}/frontend/seller/linkRefresh=true`,
-            return_url: `${process.env.EXPO_PUBLIC_API_URL}/frontend/seller/linkReturn=true`,
+            refresh_url: `${process.env.EXPO_PUBLIC_API_URL}/frontend/seller?linkRefresh=true`,
+            return_url: `${process.env.EXPO_PUBLIC_API_URL}/frontend/seller?linkReturn=true`,
         })
     })
 
@@ -31,7 +31,42 @@ export const linkSellerAPI = async(accessToken: string): Promise<Seller> => {
         throw new Error(`Failed to create link-seller session: (${response.status})`)
     }
 
-    const json: LinkSellerResponse = await response.json();
+    const json: LinkSellerResponse = await response.json()
 
-    return json.data;
+    return json.data
+}
+
+interface CheckoutSession {
+    url: string
+}
+
+interface CheckoutSessionResponse {
+    data: {
+        url: string
+    }
+}
+
+export const createCheckoutSessionAPI = async(accessToken: string, itemId: string): Promise<CheckoutSession> => {
+    const url = `${API_URL}/${itemId}`
+    console.log("creating checkout session:", url)
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+            success_url: `${process.env.EXPO_PUBLIC_API_URL}/frontend/payment.html?success=true&itemId=${itemId}`,
+            cancel_url: `${process.env.EXPO_PUBLIC_API_URL}/frontend/payment.html?cancel=true&itemId=${itemId}`,
+        })
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to create checkout session: (${response.status})`)
+    }
+
+    const json: CheckoutSessionResponse = await response.json()
+
+    return json.data
 }
