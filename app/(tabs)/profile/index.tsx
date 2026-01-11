@@ -6,9 +6,9 @@ import { View, Text, Platform, Pressable } from 'react-native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as WebBrowser from 'expo-web-browser';
 import { toast } from 'sonner-native';
-import { Feather } from "@expo/vector-icons";
 import ProfileMenuItem from "@/components/ProfileMenuItem";
-import { router } from "expo-router";
+import { router, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
+import { useEffect } from "react";
 
 const Profile = () => {
   const { signOut, user, accessToken } = useAuth()
@@ -77,7 +77,7 @@ const Profile = () => {
                 onPress={signOut}
                 title="Sign Out"
                 style="bg-white border-2 border-slate-100 mb-[100px]"
-                textStyle="text-slate-600 font-quicksand-bold"
+                textStyle="!text-slate-600 font-quicksand-bold"
             />
         </View>
 

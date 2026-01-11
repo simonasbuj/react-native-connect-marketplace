@@ -1,7 +1,7 @@
-import { View, Text, FlatList, Image, Dimensions, StyleSheet, ScrollView, NativeSyntheticEvent, NativeScrollEvent } from 'react-native'
+import { View, Text, FlatList, Image, Dimensions, StyleSheet, ScrollView, NativeSyntheticEvent, NativeScrollEvent, Platform } from 'react-native'
 import React, { useState } from 'react'
-import { useLocalSearchParams } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
+import { router, useLocalSearchParams } from "expo-router";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { fetchListing, LISTINGS_QUERY_KEYS } from "@/api/listings.api";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import PageLoadError from "@/components/PageLoadError";
@@ -9,11 +9,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "@/components/CustomButton";
 import Seperator from "@/components/Seperator";
 import { images } from "@/constants";
-
+import { createCheckoutSessionAPI } from "@/api/payments.api";
+import * as WebBrowser from 'expo-web-browser';
+import { toast } from 'sonner-native';
+import { useAuth } from "@/context/AuthContext";
 
 const { width } = Dimensions.get('window');
 
 const ListingPage = () => {
+  const { accessToken } = useAuth()
+
   const params = useLocalSearchParams()
   const id = Array.isArray(params.id) ? params.id[0] : params.id
 
@@ -28,6 +33,29 @@ const ListingPage = () => {
     queryKey: LISTINGS_QUERY_KEYS.fetchListing(id),
     queryFn: () => fetchListing({id: id}),
     staleTime: 60 * 1000,
+  })
+
+  const { mutate: createCheckoutSessionMutate, isPending } = useMutation({
+    mutationFn: ({ token, itemId }: { token: string; itemId: string }) => createCheckoutSessionAPI(token, itemId),
+    onSuccess: async (data) => {
+      if (data) {
+        const result = await WebBrowser.openAuthSessionAsync(data.url)
+        
+        if (result.type === "success") {
+          router.replace("/(tabs)/profile")
+          
+          setTimeout(() => {
+            router.push("/(tabs)/profile/my-orders")
+            toast.success("Payment succesful")
+          }, 100)
+        } else if (result.type === "cancel" || result.type === "dismiss") {
+          if (Platform.OS === 'ios') toast.error("Payment canceled")
+        }
+      }
+    },
+    onError: (e) => {
+      toast.error(e.message)
+    }
   })
 
   if (isLoading) {
@@ -118,7 +146,12 @@ const ListingPage = () => {
       </ScrollView>
       
       <View className="pb-6 px-4">
-        <CustomButton title="BUY" textStyle="font-quicksand-bold shadow-xl"/>
+        <CustomButton 
+          title="BUY" 
+          textStyle="font-quicksand-bold shadow-xl"
+          onPress={() => createCheckoutSessionMutate({ token: accessToken!, itemId: id})}
+          isLoading={isPending}
+        />
       </View>
     </SafeAreaView>
   )
