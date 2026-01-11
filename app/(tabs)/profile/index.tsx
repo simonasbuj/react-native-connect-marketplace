@@ -8,6 +8,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { toast } from 'sonner-native';
 import { Feather } from "@expo/vector-icons";
 import ProfileMenuItem from "@/components/ProfileMenuItem";
+import { router } from "expo-router";
 
 const Profile = () => {
   const { signOut, user, accessToken } = useAuth()
@@ -64,8 +65,9 @@ const Profile = () => {
           </View>
 
           <View className="bg-slate-50 gap-2 p-6 rounded-[24px] border border-slate-100 mb-6 space-y-2">
-            <ProfileMenuItem label="My Orders" iconName="shopping-bag" onPress={() => console.log("Going to My Orders")}/>
-            <ProfileMenuItem label="Settings" iconName="settings" onPress={() => console.log("Going to Settings")}/>
+            <ProfileMenuItem label="My Listings" iconName="package" onPress={() => router.push("/profile/my-listings")}/>
+            <ProfileMenuItem label="My Orders" iconName="shopping-bag" onPress={() => router.push("/profile/my-orders")}/>
+            <ProfileMenuItem label="Settings" iconName="settings" onPress={() => router.push("/profile/settings")}/>
           </View>
 
         </View>
