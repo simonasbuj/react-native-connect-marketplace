@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, Pressable } from 'react-native'
+import { View, Text, FlatList, Image, Pressable, TextInput } from 'react-native'
 import { useLocalSearchParams, useRouter  } from "expo-router";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchListings, LISTINGS_QUERY_KEYS } from "@/api/listings.api";
@@ -7,12 +7,15 @@ import { images } from "@/constants";
 import { Feather } from '@expo/vector-icons';
 import LoadingIndicator from "@/components/LoadingIndicator";
 import PageLoadError from "@/components/PageLoadError";
+import { useState } from "react";
 
 const Search = () => {
   const router = useRouter()
   
   const params = useLocalSearchParams()
   const category = Array.isArray(params.category) ? params.category[0] : params.category
+
+  const [keyword, setKeyword] = useState("")
 
   const { data, isFetching, isFetchingNextPage, error, refetch, fetchNextPage } = useInfiniteQuery({
       queryKey: LISTINGS_QUERY_KEYS.fetchListings(category, ""),
@@ -44,8 +47,26 @@ const Search = () => {
             </Pressable>
           )}
       </View>
-      <View className="px-5 pb-5">
-        <Text>Search Bar</Text>
+
+      <View className="px-5 pb-4">
+        <View className="flex-row items-center bg-white rounded-xl px-4 h-12 border-b border-gray-200">
+          <Feather name="search" size={20} color="#9ca3af" />
+          <TextInput 
+            className="flex-1 ml-3 font-medium text-gray-800 text-base h-full"
+            placeholder="Search..."
+            placeholderTextColor="#9ca3af"
+            value={keyword}
+            onChangeText={(text) => setKeyword(text)}
+            onSubmitEditing={() => console.log("submit search")}
+            returnKeyType="search"
+            autoCapitalize="none"
+          />
+          {keyword.length > 0 && (
+            <Pressable onPress={() => setKeyword("")}>
+              <Feather name="x-circle" size={18} color="#9ca3af" />
+            </Pressable>
+          )}
+        </View>
       </View>
 
       {isFetching && !isFetchingNextPage ? (

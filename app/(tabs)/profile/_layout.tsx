@@ -9,7 +9,7 @@ export default function ProfileLayout() {
       <Stack.Screen name="index" options={{ headerShown: false, title: "Profile" }}/>
       <Stack.Screen name="my-listings" options={{ title: "Listings" }}/>
       <Stack.Screen name="my-orders" options={{ title: "Orders" }} />
-      <Stack.Screen name="settings"/>
+      <Stack.Screen name="settings" options={{ title: "Settings" }}/>
     </Stack>
   )
 }
