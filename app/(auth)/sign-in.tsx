@@ -7,7 +7,6 @@ import { Link, router } from 'expo-router'
 import { useState } from "react"
 import { View, Text } from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
-import * as AuthSession from 'expo-auth-session'
 
 const SignIn = () => {
   const { signIn } = useAuth()
