@@ -122,3 +122,40 @@ export const signUpAPI = async(payload: SignUpPayload) => {
         throw new Error(`Failed to sign up: (${response.status})`)
     }
 }
+
+
+export const signInWithOAuthAPI = async (code: string): Promise<TokenData> => {
+    const provider = getProvider(code)
+    const url = `${API_URL}/${provider}/exchange`
+
+    console.log("signing in with oauth code:", url)
+
+    if (!code) {
+        throw new Error("Please provide oauth exchange code")
+    }
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            code: code
+        })
+    })
+
+    if (!response.ok) {
+        throw new Error(`Failed to sign in using oauth: (${response.status})`)
+    }
+
+    const json: SignInResponse = await response.json()
+
+    return json.data;
+}
+
+function getProvider(code: string) {
+    if (code.length > 21) {
+        return "google"
+    }
+    return "github"
+}

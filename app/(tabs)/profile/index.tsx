@@ -1,14 +1,13 @@
-import { linkSellerAPI } from "@/api/payments.api";
+import { linkSellerAPI } from "@/api/payments.api"
 import CustomButton from "@/components/CustomButton"
 import { useAuth } from "@/context/AuthContext"
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query"
 import { View, Text, Platform, Pressable } from 'react-native'
-import { SafeAreaView } from "react-native-safe-area-context";
-import * as WebBrowser from 'expo-web-browser';
+import { SafeAreaView } from "react-native-safe-area-context"
+import * as WebBrowser from 'expo-web-browser'
 import { toast } from 'sonner-native';
 import ProfileMenuItem from "@/components/ProfileMenuItem";
-import { router, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
-import { useEffect } from "react";
+import { router } from "expo-router";
 
 const Profile = () => {
   const { signOut, user, accessToken } = useAuth()
