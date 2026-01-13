@@ -22,8 +22,8 @@ export const linkSellerAPI = async(accessToken: string): Promise<Seller> => {
             "Authorization": `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-            refresh_url: `${process.env.EXPO_PUBLIC_API_URL}/frontend/seller?linkRefresh=true`,
-            return_url: `${process.env.EXPO_PUBLIC_API_URL}/frontend/seller?linkReturn=true`,
+            refresh_url: `${process.env.EXPO_PUBLIC_API_URL}/frontend/link-seller.html?linkRefresh=true`,
+            return_url: `${process.env.EXPO_PUBLIC_API_URL}/frontend/link-seller.html?linkReturn=true`,
         })
     })
 
