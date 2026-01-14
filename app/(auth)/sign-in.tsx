@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext"
 import { useMutation } from "@tanstack/react-query"
 import { Link, router } from 'expo-router'
 import { useState } from "react"
-import { View, Text } from 'react-native'
+import { View, Text, Platform } from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 
 const SignIn = () => {
@@ -29,7 +29,9 @@ const SignIn = () => {
 
   const handleOauth = async (provider: string) => {
     await WebBrowser.openBrowserAsync(`${process.env.EXPO_PUBLIC_API_URL}/api/v1/auth/${provider}/init`)
-    router.push("/(auth)/oauth-exchange")
+    if (Platform.OS === 'ios') {
+      router.push('/(auth)/oauth-exchange')
+    }
   }
 
   const { mutate, isPending, isError, error } = signInMutation
