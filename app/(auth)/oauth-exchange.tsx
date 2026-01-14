@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
-import React, { useState } from 'react'
-import { Link } from "expo-router"
+import React, { useEffect, useState } from 'react'
+import { Link, useLocalSearchParams } from "expo-router"
 import CustomInput from "@/components/CustomInput"
 import CustomButton from "@/components/CustomButton"
 import { signInWithOAuthAPI } from "@/api/auth.api"
@@ -9,7 +9,10 @@ import { useAuth } from "@/context/AuthContext"
 
 const OAuthExchange = () => {
   const { signIn } = useAuth()
-  const [code, setCode] = useState("")
+  const param = useLocalSearchParams()
+
+  const codeParam = Array.isArray(param.code) ? param.code[0] : param.code
+  const [code, setCode] = useState(codeParam)
 
   const signInMutation = useMutation({
     mutationFn: signInWithOAuthAPI,
@@ -17,6 +20,10 @@ const OAuthExchange = () => {
       signIn(access_token)
     },
   })
+
+  useEffect(() => {
+    console.log(param)
+  }, [])
 
   const { mutate, isPending, isError, error } = signInMutation
 
@@ -27,7 +34,6 @@ const OAuthExchange = () => {
           placeholder="Enter oauth code"
           value={code}
           onChangeText={text => setCode(text)}
-          secureTextEntry={true}
         />
 
       {isError && (
